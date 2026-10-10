@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MissionForge — Space Mission Design Game</title>
+  <meta name="description" content="MissionForge is an educational space mission design simulator inspired by NASA open data.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="stars"></div>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">✦</span> MISSIONFORGE</div>
+    <div class="top-status"><span class="live-dot"></span> SIMULATION ONLINE</div>
+  </header>
+
+  <main>
+    <section id="home" class="screen active">
+      <div class="hero">
+        <div class="eyebrow">NASA SPACE APPS • EDUCATIONAL SIMULATOR</div>
+        <h1>DESIGN YOUR MISSION.<br><span>TEST YOUR DECISIONS.</span></h1>
+        <p class="hero-copy">Build a mission to the Moon or Mars. Balance mass, power, budget, communications and science — then launch it and discover the consequences of your choices.</p>
+        <button class="primary-btn" id="startBtn">START MISSION <span>→</span></button>
+        <div class="hero-stats">
+          <div><strong>02</strong><span>DESTINATIONS</span></div>
+          <div><strong>05</strong><span>INSTRUMENTS</span></div>
+          <div><strong>∞</strong><span>WHAT-IF SCENARIOS</span></div>
+        </div>
+      </div>
+      <div class="hero-orbit">
+        <div class="planet earth"></div>
+        <div class="orbit orbit-1"></div>
+        <div class="orbit orbit-2"></div>
+        <div class="satellite">◆</div>
+        <div class="planet mars"></div>
+      </div>
+    </section>
+
+    <section id="builder" class="screen">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">01 / MISSION ARCHITECT</div>
+          <h2>Configure your mission</h2>
+        </div>
+        <button class="ghost-btn" data-home>← Home</button>
+      </div>
+
+      <div class="builder-grid">
+        <div class="builder-main">
+          <div class="panel">
+            <h3>Destination</h3>
+            <div class="choice-grid two" id="destinationChoices">
+              <button class="choice-card selected" data-destination="mars">
+                <span class="choice-icon">🔴</span>
+                <strong>MARS</strong><small>Deep-space exploration</small>
+              </button>
+              <button class="choice-card" data-destination="moon">
+                <span class="choice-icon">◐</span>
+                <strong>MOON</strong><small>Lunar research mission</small>
+              </button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Mission objective</h3>
+            <select id="objective">
+              <option value="science">Scientific Research</option>
+              <option value="exploration">Exploration</option>
+              <option value="technology">Technology Demonstration</option>
+            </select>
+          </div>
+
+          <div class="panel">
+            <h3>Launch vehicle</h3>
+            <div class="choice-grid three" id="rocketChoices">
+              <button class="choice-card" data-rocket="light"><strong>LIGHT</strong><small>8 t capacity</small><b>$500M</b></button>
+              <button class="choice-card selected" data-rocket="medium"><strong>MEDIUM</strong><small>15 t capacity</small><b>$900M</b></button>
+              <button class="choice-card" data-rocket="heavy"><strong>HEAVY</strong><small>25 t capacity</small><b>$1.4B</b></button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title-row">
+              <h3>Scientific instruments</h3>
+              <span class="muted">Select any combination</span>
+            </div>
+            <div class="instrument-grid" id="instrumentChoices"></div>
+          </div>
+        </div>
+
+        <aside class="telemetry-panel">
+          <div class="telemetry-header"><span>MISSION TELEMETRY</span><span class="status-pill">LIVE</span></div>
+          <div class="telemetry-body">
+            <div class="mission-label" id="missionLabel">MARS EXPLORATION MISSION</div>
+            <div class="metric"><div><span>MASS</span><b id="massValue">—</b></div><div class="bar"><i id="massBar"></i></div></div>
+            <div class="metric"><div><span>BUDGET</span><b id="budgetValue">—</b></div><div class="bar"><i id="budgetBar"></i></div></div>
+            <div class="metric"><div><span>POWER</span><b id="powerValue">—</b></div><div class="bar"><i id="powerBar"></i></div></div>
+            <div class="metric"><div><span>COMMUNICATION</span><b id="commValue">—</b></div><div class="bar"><i id="commBar"></i></div></div>
+            <div class="metric"><div><span>SCIENCE</span><b id="scienceValue">—</b></div><div class="bar"><i id="scienceBar"></i></div></div>
+            <div class="metric"><div><span>RISK</span><b id="riskValue">—</b></div><div class="bar risk"><i id="riskBar"></i></div></div>
+            <div id="constraintBox" class="constraint ok">✓ Configuration is currently feasible.</div>
+            <button class="primary-btn full" id="simulateBtn">SIMULATE MISSION →</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="simulation" class="screen">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">02 / MISSION CONTROL</div>
+          <h2 id="simTitle">Mission simulation</h2>
+        </div>
+        <button class="ghost-btn" id="backBuilder">← Modify mission</button>
+      </div>
+
+      <div class="sim-layout">
+        <div class="panel simulation-panel">
+          <div class="countdown" id="countdown">T − 10</div>
+          <div class="mission-ring"><div id="simPercent">0%</div></div>
+          <div class="sim-status" id="simStatus">Initializing launch sequence…</div>
+          <div class="timeline" id="timeline">
+            <div class="timeline-item active"><span>01</span><b>LAUNCH</b><em>Standby</em></div>
+            <div class="timeline-item"><span>02</span><b>EARTH ORBIT</b><em>Standby</em></div>
+            <div class="timeline-item"><span>03</span><b>DEPARTURE</b><em>Standby</em></div>
+            <div class="timeline-item"><span>04</span><b>DEEP SPACE</b><em>Standby</em></div>
+            <div class="timeline-item"><span>05</span><b>COMMUNICATION</b><em>Standby</em></div>
+            <div class="timeline-item"><span>06</span><b>ARRIVAL</b><em>Standby</em></div>
+            <div class="timeline-item"><span>07</span><b>LANDING</b><em>Standby</em></div>
+            <div class="timeline-item"><span>08</span><b>SCIENCE OPS</b><em>Standby</em></div>
+          </div>
+        </div>
+
+        <aside class="panel live-readout">
+          <div class="eyebrow">FLIGHT READOUT</div>
+          <div id="simMetrics"></div>
+          <div class="console" id="consoleLog"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="report" class="screen">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">03 / MISSION REPORT</div>
+          <h2>Mission results</h2>
+        </div>
+        <button class="ghost-btn" id="newMission">↻ New mission</button>
+      </div>
+
+      <div class="report-hero">
+        <div>
+          <div class="eyebrow">MISSION OUTCOME</div>
+          <h2 id="outcomeTitle">MISSION COMPLETE</h2>
+          <p id="outcomeCopy"></p>
+        </div>
+        <div class="score-circle"><strong id="finalScore">0</strong><span>/ 100</span></div>
+      </div>
+
+      <div class="report-grid">
+        <div class="panel">
+          <div class="panel-title-row"><h3>Mission metrics</h3><span class="muted">Educational model</span></div>
+          <div class="report-metrics" id="reportMetrics"></div>
+          <div class="model-note" id="modelNote"></div>
+        </div>
+
+        <div class="panel advisor">
+          <div class="advisor-head"><span class="ai-orb">✦</span><div><div class="eyebrow">AI MISSION ADVISOR</div><h3>Decision review</h3></div></div>
+          <div id="advisorContent" class="advisor-content">
+            <div class="spinner"></div><p>Analyzing your mission…</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel whatif">
+        <div class="panel-title-row"><div><div class="eyebrow">WHAT-IF LAB</div><h3>Change one decision</h3></div><span class="muted">Explore trade-offs</span></div>
+        <div class="whatif-controls">
+          <select id="whatIfAction">
+            <option value="remove:spectrometer">Remove Spectrometer</option>
+            <option value="remove:camera">Remove Camera</option>
+            <option value="remove:radiation">Remove Radiation Detector</option>
+            <option value="remove:soil">Remove Soil Analyzer</option>
+            <option value="remove:weather">Remove Weather Station</option>
+            <option value="add:spectrometer">Add Spectrometer</option>
+            <option value="add:soil">Add Soil Analyzer</option>
+            <option value="rocket:light">Switch to Light Vehicle</option>
+            <option value="rocket:medium">Switch to Medium Vehicle</option>
+            <option value="rocket:heavy">Switch to Heavy Vehicle</option>
+          </select>
+          <button class="secondary-btn" id="whatIfBtn">RUN WHAT-IF</button>
+        </div>
+        <div id="whatIfResult" class="whatif-result hidden"></div>
+      </div>
+
+      <div class="panel nasa-panel">
+        <div class="panel-title-row"><div><div class="eyebrow">NASA OPEN DATA</div><h3>Today's space connection</h3></div><span id="nasaDate" class="muted"></span></div>
+        <div class="nasa-content">
+          <img id="nasaImage" alt="NASA Astronomy Picture of the Day">
+          <div><h3 id="nasaTitle">Loading NASA data…</h3><p id="nasaExplanation"></p><small id="nasaCredit"></small></div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        MissionForge is an educational simulation. Its scoring and constraints are simplified for learning and are not NASA flight-analysis software.
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
